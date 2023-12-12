@@ -8,7 +8,7 @@ import { compile, lex } from "./compiler.js";
 
 const argv = yargs(hideBin(process.argv))
 	.usage("Usage: $0 <inputFile> [options]")
-	.command("$0 <inputFile> [outputFile]", "Run the program", (yargs) => {
+	.command("$0 <inputFile> [outputFile]", "Compile an Ogipier program to JavaScript.", (yargs) => {
 		yargs
 			.positional("inputFile", {
 				describe: "Path to input Ogipier file.",
