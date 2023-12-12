@@ -29,13 +29,19 @@ First, write your Ogipier program, saving it as `foo.ogi`.
 Now, you can run:
 
 ```bash
-ogipier foo.ogi
+ogipier foo.ogi --run
+```
+
+You can also save your compiled JavaScript:
+
+```bash
+ogipier foo.ogi foo.ogi.js
 ```
 
 ## Example
 
-Try
+Try:
 
 ```bash
-ogipier example.ogi
+ogipier example.ogi --run
 ```
