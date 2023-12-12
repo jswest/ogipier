@@ -75,7 +75,9 @@ export function compile(input) {
         out.push("stack.push(stack[stack.length - 2]);");
         break;
       case "SWAP":
-        out.push("[...stack.slice(0, -2), stack[stack.length - 1], stack[stack.length - 2]];");
+        out.push(
+          "[...stack.slice(0, -2), stack[stack.length - 1], stack[stack.length - 2]];",
+        );
         break;
       // Printing.
       case "PRINT":
