@@ -1,0 +1,4 @@
+21 21 ADD
+" " CONCAT
+"Hello, world!" CONCAT
+PRINT

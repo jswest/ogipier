@@ -1,0 +1,12 @@
+{
+  "name": "simple-language",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "John West",
+  "license": "MIT",
+  "description": "A Reverse Polish Notation language for the web.",
+  "type": "module",
+  "bin": {
+    "ogipier": "run.js"
+  }
+}
