@@ -16,6 +16,16 @@ Here you can get the meaning of life:
 21 21 ADD
 ```
 
+Here's the fibonacci sequence to 20 digits:
+
+```ogipier
+0 1
+OVER OVER SWAP OUTPUT OUTPUT
+18 LOOP
+	OVER OVER ADD PRINT
+END
+```
+
 ## Installing it.
 
 ```

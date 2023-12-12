@@ -9,8 +9,13 @@ const types = [
   { regex: /^PRINT$/, name: "PRINT" },
   { regex: /^SWAP$/, name: "SWAP" },
   { regex: /^OUTPUT$/, name: "OUTPUT" },
-  { regex: /^OVER/, name: "OVER" },
+  { regex: /^DUPLICATE$/, name: "DUPLICATE" },
+  { regex: /^OVER$/, name: "OVER" },
+  { regex: /^LOOP$/, name: "LOOP" },
+  { regex: /^END$/, name: "END" },
 ];
+
+const ignored = [" ", "\t"];
 
 export function lex(input) {
   const result = [];
@@ -18,7 +23,9 @@ export function lex(input) {
   const lines = input.split("\n");
   for (const [lineIndex, line] of lines.entries()) {
     if (!line.startsWith("--")) {
-      const tokens = line.split(/("[^"]*"|\S+)/).filter((d) => d && d !== " ");
+      const tokens = line
+        .split(/("[^"]*"|\S+)/)
+        .filter((d) => d && !ignored.includes(d));
       for (const [tokenIndex, token] of tokens.entries()) {
         let matched = false;
         for (const type of types) {
@@ -45,16 +52,18 @@ export function lex(input) {
 }
 
 export function compile(input) {
-  const out = [`const stack = [];`];
+  const out = [`let stack = [];`];
 
   for (const token of input) {
     switch (token.type) {
+      // Types.
       case "NUMBER":
         out.push(`stack.push(${parseFloat(token.value)});`);
         break;
       case "STRING":
         out.push(`stack.push("${token.value.replace(/^"|"$/g, "")}");`);
         break;
+      // Math, etc.
       case "ADD":
         out.push("stack.push(stack.pop() + stack.pop());");
         break;
@@ -71,12 +80,15 @@ export function compile(input) {
         out.push("stack.push(`${stack.pop()}${stack.pop()}`);");
         break;
       // Stack manipulation.
+      case "DUPLICATE":
+        out.push("stack.push(stack[stack.length - 1]);");
+        break;
       case "OVER":
         out.push("stack.push(stack[stack.length - 2]);");
         break;
       case "SWAP":
         out.push(
-          "[...stack.slice(0, -2), stack[stack.length - 1], stack[stack.length - 2]];",
+          "stack = [...stack.slice(0, -2), stack[stack.length - 1], stack[stack.length - 2]];",
         );
         break;
       // Printing.
@@ -85,6 +97,15 @@ export function compile(input) {
         break;
       case "OUTPUT":
         out.push("console.log(stack.pop());");
+        break;
+      // Control.
+      case "LOOP":
+        out.push(
+          "for (const [i] of Array.from({length: stack.pop()}).entries()) {",
+        );
+        break;
+      case "END":
+        out.push("}");
         break;
     }
   }
