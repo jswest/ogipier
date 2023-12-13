@@ -10,6 +10,7 @@
     "ogipier": "run.js"
   },
   "dependencies": {
+    "prettier": "^3.1.1",
     "yargs": "^17.7.2"
   }
 }

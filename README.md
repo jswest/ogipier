@@ -7,7 +7,7 @@ It compiles to JavaScript so that it can--someday--be used on the web.
 Here is a basic "hello world" program:
 
 ```ogipier
-"Hello, World!" PRINT
+"Hello, World!" OUTPUT
 ```
 
 Here you can get the meaning of life:
@@ -23,6 +23,20 @@ Here's the fibonacci sequence to 20 digits:
 OVER OVER SWAP OUTPUT OUTPUT
 18 LOOP
 	OVER OVER ADD PRINT
+END
+```
+
+Here's the fibonacci sequence until the value is greater than 10,000:
+
+```ogipier
+0 1
+OVER OVER SWAP OUTPUT OUTPUT
+BEGIN
+	OVER OVER ADD
+	DUPLICATE 10000 > IF
+		STOP
+	END
+	PRINT
 END
 ```
 

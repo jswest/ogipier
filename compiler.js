@@ -8,14 +8,24 @@ const types = [
   { regex: /^CONCAT$/, name: "CONCAT" },
   { regex: /^PRINT$/, name: "PRINT" },
   { regex: /^SWAP$/, name: "SWAP" },
+  { regex: /^DROP$/, name: "DROP" },
   { regex: /^OUTPUT$/, name: "OUTPUT" },
   { regex: /^DUPLICATE$/, name: "DUPLICATE" },
   { regex: /^OVER$/, name: "OVER" },
   { regex: /^LOOP$/, name: "LOOP" },
+  { regex: /^BEGIN$/, name: "BEGIN" },
+  { regex: /^STOP$/, name: "STOP" },
   { regex: /^END$/, name: "END" },
+  { regex: /^IF$/, name: "IF" },
+  { regex: /^ELSE$/, name: "ELSE" },
+  { regex: /^==$/, name: "==" },
+  { regex: /^>$/, name: ">" },
+  { regex: /^<$/, name: "<" },
+  { regex: /^>=$/, name: ">=" },
+  { regex: /^<=$/, name: "<=" },
 ];
 
-const ignored = [" ", "\t"];
+const ignored = [/^\s+$/];
 
 export function lex(input) {
   const result = [];
@@ -25,7 +35,15 @@ export function lex(input) {
     if (!line.startsWith("--")) {
       const tokens = line
         .split(/("[^"]*"|\S+)/)
-        .filter((d) => d && !ignored.includes(d));
+        .filter((d) => d)
+        .filter((d) => {
+          for (const ignore of ignored) {
+            if (ignore.test(d)) {
+              return false;
+            }
+          }
+          return true;
+        });
       for (const [tokenIndex, token] of tokens.entries()) {
         let matched = false;
         for (const type of types) {
@@ -91,6 +109,9 @@ export function compile(input) {
           "stack = [...stack.slice(0, -2), stack[stack.length - 1], stack[stack.length - 2]];",
         );
         break;
+      case "DROP":
+        out.push("stack = [];");
+        break;
       // Printing.
       case "PRINT":
         out.push("console.log(stack[stack.length - 1]);");
@@ -104,8 +125,32 @@ export function compile(input) {
           "for (const [i] of Array.from({length: stack.pop()}).entries()) {",
         );
         break;
+      case "STOP":
+        out.push("break;");
+        break;
       case "END":
         out.push("}");
+        break;
+      case "==":
+        out.push("stack.push(stack.pop() === stack.pop() ? 1 : 0);");
+        break;
+      case ">":
+        out.push("stack.push(stack.pop() < stack.pop() ? 1 : 0);");
+        break;
+      case "<":
+        out.push("stack.push(stack.pop() > stack.pop() ? 1 : 0);");
+        break;
+      case ">=":
+        out.push("stack.push(stack.pop() <= stack.pop() ? 1 : 0);");
+        break;
+      case "<=":
+        out.push("stack.push(stack.pop() >= stack.pop() ? 1 : 0);");
+        break;
+      case "IF":
+        out.push("if (stack.pop()) {");
+        break;
+      case "BEGIN":
+        out.push("while (true) {");
         break;
     }
   }

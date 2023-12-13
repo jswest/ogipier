@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync, writeFileSync } from "fs";
+import * as prettier from "prettier";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
@@ -8,17 +9,21 @@ import { compile, lex } from "./compiler.js";
 
 const argv = yargs(hideBin(process.argv))
 	.usage("Usage: $0 <inputFile> [options]")
-	.command("$0 <inputFile> [outputFile]", "Compile an Ogipier program to JavaScript.", (yargs) => {
-		yargs
-			.positional("inputFile", {
-				describe: "Path to input Ogipier file.",
-				type: "string",
-			})
-			.positional("outputFile", {
-				describe: "Path to the compiled JavaScript file",
-				type: "string",
-			});
-	})
+	.command(
+		"$0 <inputFile> [outputFile]",
+		"Compile an Ogipier program to JavaScript.",
+		(yargs) => {
+			yargs
+				.positional("inputFile", {
+					describe: "Path to input Ogipier file.",
+					type: "string",
+				})
+				.positional("outputFile", {
+					describe: "Path to the compiled JavaScript file",
+					type: "string",
+				});
+		},
+	)
 	.option("run", {
 		alias: "r",
 		describe: "Run the program immediately",
@@ -27,14 +32,17 @@ const argv = yargs(hideBin(process.argv))
 	})
 	.help().argv;
 
-const input = readFileSync(argv.inputFile).toString();
+(async () => {
+	const input = readFileSync(argv.inputFile).toString();
 
-const tokens = lex(input);
+	const tokens = lex(input);
 
-const compiled = compile(tokens);
+	const compiled = compile(tokens);
 
-if (process.argv.includes("--run")) {
-	eval(compiled);
-} else {
-	writeFileSync(argv.outputFile, compiled);
-}
+	if (process.argv.includes("--run")) {
+		eval(compiled);
+	} else {
+		const nice = await prettier.format(compiled, {parser: "babel"});
+		writeFileSync(argv.outputFile, nice);
+	}
+})();
