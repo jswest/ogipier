@@ -133,5 +133,5 @@ ogipier foo.ogi foo.ogi.js
 
 **Functions and variables (which are just functions here)**
 
-- `:` consumes the last element on the stack, if it's a string, and makes it a keyword which can be used later. Everything after it is the function or variable definition.
+- `:` consumes the last element on the stack, if it's a string, and makes it a keyword which can be used later. Everything after it is the function or variable definition. _N.B.: names must be all uppercase and may only include letters and underscores._
 - `.` ends a function definition.
