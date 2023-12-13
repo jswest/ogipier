@@ -2,7 +2,7 @@
 
 I don't know why I made a Reverse Polish Notation language, but I did.
 
-It compiles to JavaScript so that it can--someday--be used on the web.
+It compiles to JavaScript so that it can—someday, maybe—be used on the web.
 
 Here is a basic "hello world" program:
 
@@ -13,24 +13,28 @@ Here is a basic "hello world" program:
 Here you can get the meaning of life:
 
 ```ogipier
-21 21 ADD
+21 21 ADD OUTPUT
 ```
 
 Here's the fibonacci sequence to 20 digits:
 
 ```ogipier
-0 1
-OVER OVER SWAP OUTPUT OUTPUT
-18 LOOP
-	OVER OVER ADD PRINT
+20 TIMES
+	INDEX 0 == IF
+		0 PRINT
+		1 PRINT
+	END
+	INDEX 1 >= IF
+		OVER OVER ADD PRINT
+	END
 END
 ```
 
 Here's the fibonacci sequence until the value is greater than 10,000:
 
 ```ogipier
-0 1
-OVER OVER SWAP OUTPUT OUTPUT
+0 PRINT
+1 PRINT
 BEGIN
 	OVER OVER ADD
 	DUPLICATE 10000 > IF
@@ -40,9 +44,31 @@ BEGIN
 END
 ```
 
+To define and use a variable:
+
+```ogipier
+"FOO" : 42 .
+"The meaning of life is" FOO CONCAT OUTPUT
+```
+
+To define and use a function:
+
+```ogipier
+"FIBONNACI" :
+	TIMES
+		INDEX 0 == IF 0 1 END
+		INDEX 1 >= IF OVER OVER ADD END
+	END
+.
+50 FIBONNACI PRINT
+```
+
+This, for example, prints the 50th digit of the fibonacci sequence.
+
 ## Installing it.
 
-```
+```bash
+npm install
 npm link
 ```
 

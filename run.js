@@ -5,13 +5,13 @@ import * as prettier from "prettier";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-import { compile, lex } from "./compiler.js";
+import { compile } from "./compiler.js";
 
 const argv = yargs(hideBin(process.argv))
 	.usage("Usage: $0 <inputFile> [options]")
 	.command(
 		"$0 <inputFile> [outputFile]",
-		"Compile an Ogipier program to JavaScript.",
+		"Compile an Ogipier program to; JavaScript.",
 		(yargs) => {
 			yargs
 				.positional("inputFile", {
@@ -35,14 +35,17 @@ const argv = yargs(hideBin(process.argv))
 (async () => {
 	const input = readFileSync(argv.inputFile).toString();
 
-	const tokens = lex(input);
-
-	const compiled = compile(tokens);
+	const compiled = compile(input);
 
 	if (process.argv.includes("--run")) {
 		eval(compiled);
 	} else {
-		const nice = await prettier.format(compiled, {parser: "babel"});
-		writeFileSync(argv.outputFile, nice);
+		try {
+			const nice = await prettier.format(compiled, { parser: "babel" });
+			writeFileSync(argv.outputFile, nice);
+		} catch (error) {
+			console.log(error);
+			writeFileSync(argv.outputFile, compiled);
+		}
 	}
 })();
