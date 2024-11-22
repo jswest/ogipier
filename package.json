@@ -1,13 +1,13 @@
 {
-  "name": "simple-language",
-  "version": "1.0.0",
+  "name": "ogipier",
+  "version": "0.2.0",
   "main": "index.js",
-  "author": "John West",
+  "author": "John West <john@beebe-west.com>",
   "license": "MIT",
   "description": "A Reverse Polish Notation language for the web.",
   "type": "module",
   "bin": {
-    "ogipier": "run.js"
+    "ogipier": "./bin/index.js"
   },
   "dependencies": {
     "prettier": "^3.1.1",
