@@ -1,0 +1,4 @@
+"foo" 1 "bar" 2
+0 4 ARRAY OBJECT
+"bar" GET
+PRINT

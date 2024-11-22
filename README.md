@@ -68,6 +68,21 @@ To define and use a function:
 
 This, for example, prints the 10th digit of the fibonacci sequence.
 
+You can even produce JSON:
+
+```ogipier
+"foo" 1 "bar" 2 0 4 ARRAY OBJECT PRINT
+```
+
+This yields a JSON object:
+
+```json
+{
+	"bar": 2,
+	"foo": 1,
+}
+```
+
 ## Install it.
 
 ```bash
@@ -146,6 +161,11 @@ _N.B._: Unless specified all operations consume an element from the stack!
 - `PICK`: Copies the nth element to the top.
 - `ROLL`: Moves the nth element to the top.
 - `DEPTH`: Gets the length
+
+**JSON**
+ 
+- `ARRAY`: Generates an JSON array from the second element, start_index, and the first element, end_index.
+- `OBJECT`: Generates a JSON object of key, value pairs from an array on the stack in the form [KEY, VALUE, KEY, VALUE...]
 
 **Functions and variables (which are just functions here)**
 
