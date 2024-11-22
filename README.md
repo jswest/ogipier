@@ -9,40 +9,40 @@ I don't know why I made a Reverse Polish Notation language, but I did. It compil
 Here is a basic "hello world" program:
 
 ```ogipier
-"Hello, World!" OUTPUT
+"Hello, World!" PRINT
 ```
 
 Here you can get the meaning of life:
 
 ```ogipier
-21 21 ADD OUTPUT
+21 21 ADD PRINT
 ```
 
 Here's the fibonacci sequence to 20 digits:
 
 ```ogipier
 20 TIMES
-	INDEX 0 == IF
-		0 PRINT
-		1 PRINT
-	END
-	INDEX 1 >= IF
-		OVER OVER ADD PRINT
-	END
-END
+	0 INDEX 0 == IF
+		0 DUPLICATE PRINT
+		1 DUPLICATE PRINT
+	THEN
+	0 INDEX 1 >= IF
+		OVER OVER ADD DUPLICATE PRINT
+	THEN
+REPEAT
 ```
 
 Here's the fibonacci sequence until the value is greater than 10,000:
 
 ```ogipier
-0 PRINT
-1 PRINT
+0 DUPLICATE PRINT
+1 DUPLICATE PRINT
 BEGIN
 	OVER OVER ADD
 	DUPLICATE 10000 > IF
-		STOP
-	END
-	PRINT
+		BREAK
+	THEN
+	DUPLICATE PRINT
 END
 ```
 
@@ -50,7 +50,7 @@ To define and use a variable:
 
 ```ogipier
 "FOO" : 42 .
-"The meaning of life is" FOO CONCAT OUTPUT
+FOO "The meaning of life is " CONCAT PRINT
 ```
 
 To define and use a function:
@@ -58,14 +58,15 @@ To define and use a function:
 ```ogipier
 "FIBONNACI" :
 	TIMES
-		INDEX 0 == IF 0 1 END
-		INDEX 1 >= IF OVER OVER ADD END
-	END
+    0 INDEX 0 == IF 0 THEN
+    0 INDEX 1 == IF 1 THEN
+    0 INDEX 1 > IF OVER OVER ADD THEN
+	REPEAT
 .
-50 FIBONNACI PRINT
+10 FIBONNACI PRINT
 ```
 
-This, for example, prints the 50th digit of the fibonacci sequence.
+This, for example, prints the 10th digit of the fibonacci sequence.
 
 ## Install it.
 
@@ -92,44 +93,59 @@ ogipier foo.ogi foo.ogi.js
 
 ## Write it.
 
+_N.B._: Unless specified all operations consume an element from the stack!
+
 **Types**
 
 - Any postive or negative number, expressed as digits or digits and decimal points will be converted into a digit.
 - Characters in quotation marks will be converted into a string.
 
+**Control**
+
+- `IF`: Start an `if` block.
+- `ELSE`: Add an `else` statement.
+- `THEN`: End an `if` block.
+- `==`: Check the last two elements for equlity (javascript `===`).
+- `!=`: Check the last two elements for not equlity (javascript `!==`).
+- `>`, `<`, `>=`, `<=`: The second element on the stack is compared to the first element on the stack in the way you'd expect.
+- `BEGIN`: Start looping without end.
+- `END`: End a `BEGIN` loop block.
+- `TIMES`: Consume the last element and loop that many times.
+- `REPEAT`: End a `TIMES` loop block.
+- `BREAK`: Leave a loop.
+- `CONTINUE`: Continue to the next loop.
+- `AND`, `OR`, `NOT`: Boolean operations.
+
 **Math**
 
-- `ADD` will add and consume the previous two entries on the stack, and it will push the result to the stack.
-- `SUBTRACT` will subtract in the same way.
-- `MULTIPLY` will multiply in the same way.
-- `DIVIDE` will divide in the same way.
+- `ADD`: Add and consume the previous second to the top entries on the stack, and it will push the result to the stack.
+- `SUBTRACT`: Subtract in the same way.
+- `MULTIPLY`: Multiply in the same way.
+- `DIVIDE`: Divide in the same way.
+- `RANDOM`: Generate a random number between 0 and 1.
+- `CEILING`: Gets the ceiling of a number.
+- `FLOOR`: Gets the floor of a number.
 
 **Strings**
 
-- `CONCAT` will convert to string and concat the previous two entries on the stack, consuming them and pushing the result to the stack.
-- `PRINT` will print the topmost entry on the stack, followed by a CR.
-- `OUTPUT` will conume and print the topmost entry on the stack, followed by a CR.
+- `CONCAT`: Convert to string and concat the second and the first entries on the stack, pushing the result to the stack.
+- `PRINT`: Print the topmost entry on the stack, followed by a CR.
+- `UPPERCASE`, `LOWERCASE`: Converts the top element as implied.
+- `TRIM`: Removes whitespace.
+- `REPLACE`: Uses the top element to replace the second element in the third element.
+- `LENGTH`: Gets the length.
+- `INCLUDES`, `ENDS_WITH`, `STARTS_WITH`: Checks if the top element is matching the second element.
 
-**Stack manipulation**
+**Stack**
 
-- `DUPLICATE` will duplicate the first/top element of the stack.
-- `OVER` will copy the second element on the stack over the top of the stack.
-- `SWAP` will swap the first and second elements on the stack.
-- `DROP` will clear the stack.
-- `POP` will pop off the topmost element on the stack.
-
-**Control**
-
-- `TIMES` takes the previous value on the stack and loops that many times.
-- `BEGIN` begins an infinite loop.
-- `STOP` stops a `TIMES` or `BEGIN` loop.
-- `IF` evalulates the last element on the stack for truthiness.
-- `END` ends a `TIMES` or `BEGIN` loop or an `IF` statement.
-- `==` consumes and checks the first and second elements on the stack for equality.
-- `>` consumes and check if the second element on the stack is greater than the first element.
-- `>=` consumes and check if the second element on the stack is greater than or equal to the first element.
-- `<` consumes and check if the second element on the stack is less than the first element.
-- `<=` consumes and check if the second element on the stack is less than or equal to the first element.
+- `DUPLICATE`: Duplicate the top element of the stack.
+- `OVER`: Copies the second element on the stack over the top of the stack.
+- `SWAP`: Swaps the first and second elements on the stack.
+- `CLEAR`: Clears the stack.
+- `DROP`: Drops the top element.
+- `PICK`: Copies the nth element to the top.
+- `ROLL`: Moves the nth element to the top.
+- `DEPTH`: Gets the length
 
 **Functions and variables (which are just functions here)**
 

@@ -1,6 +1,2 @@
-"FOO" : 21 .
-
-2 FOO MULTIPLY
-"The meaning of life is "
-CONCAT
-PRINT
+"FOO" : 42 .
+FOO "The meaning of life is " CONCAT PRINT
